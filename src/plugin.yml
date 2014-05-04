@@ -1,0 +1,10 @@
+name: NewCommands
+version: 1.0
+main: de.ghac.newcommands.NewCommands
+author: ghac
+website: www.ghac.de
+commands:
+  newcommands:
+    description: 'Information about NewCommands plugin'
+    usage: /<command>
+    aliases: [nc]
