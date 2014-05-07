@@ -1,15 +1,42 @@
+/*
+* The MIT License
+*
+* Copyright 2014 ghac.
+*
+* Permission is hereby granted, free of charge, to any person obtaining a copy
+* of this software and associated documentation files (the "Software"), to deal
+* in the Software without restriction, including without limitation the rights
+* to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+* copies of the Software, and to permit persons to whom the Software is
+* furnished to do so, subject to the following conditions:
+*
+* The above copyright notice and this permission notice shall be included in
+* all copies or substantial portions of the Software.
+*
+* THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+* IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+* FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+* AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+* LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+* OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+* THE SOFTWARE.
+*/
+
 package de.ghac.newcommands;
 
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
+/**
+* dev.bukkit.org @ http://dev.bukkit.org/bukkit-plugins/newcommands/
+* github @ https://github.com/ghacproductions/NewCommands
+*
+* @author ghac
+*/
 public class NewCommands extends JavaPlugin implements Listener{
 
     @Override
@@ -23,46 +50,39 @@ public class NewCommands extends JavaPlugin implements Listener{
     public void onEnable() {
         System.out.println("[" + this.getName()+"] Plugin by ghac!");
         System.out.println("[" + this.getName()+"] Plugin aktiviert!");
-        getServer().getPluginManager().registerEvents(this, this);
         getConfig().addDefault("commands.newtestcommand", "&4Awesome Plugin");
         getConfig().options().copyDefaults(true);
         this.saveConfig();
+        
+        registerCommand();
 }
     public boolean onCommand(CommandSender sender, Command cmd, String cmdLabel, String[] args){
     Player p = (Player) sender;
+    if(args.length == 1){
+        if(args[0].equalsIgnoreCase("reload")){
+            if(p.hasPermission("newcommands.reload")){
+            registerCommand();
+            reloadConfig();
+            p.sendMessage(ChatColor.GOLD + "[" + this.getName()+"]" + ChatColor.DARK_GREEN + " Reloaded.");
+            return true;
+            }else{
+                p.sendMessage(ChatColor.DARK_RED + "You don't have permission");
+                return true;
+            }
+        }
+    }
     p.sendMessage(ChatColor.GOLD + "[" + this.getName()+"]" + ChatColor.DARK_GREEN + " NewCommands Plugin by ghac. 2014.");
     return true;  
     }
     
     
-    @EventHandler(priority = EventPriority.HIGH)
-  public void onPlayerSendCommand(PlayerCommandPreprocessEvent e){
 
-     String cmd = e.getMessage();
-     String command = cmd.split(" ")[0];
-     command = command.replace("/", "");
-
-     
-         if(getConfig().getString("commands." + command) != null){ 
-            String cmdanswer = getConfig().getString("commands." + command);
-            cmdanswer = cmdanswer.replace("&", "§");
-            cmdanswer = cmdanswer.replace("%MOTD%", getServer().getMotd()); // Variable for MOTD
-            cmdanswer = cmdanswer.replace("%OP%", getServer().getOnlinePlayers().length+""); // Variable for OnlinePlayers
-            cmdanswer = cmdanswer.replace("%MAXP%", getServer().getMaxPlayers()+""); // Variable for MaxPlayers
-            cmdanswer = cmdanswer.replace("%IP%", getServer().getIp()); // Variable for ServerIP
-            cmdanswer = cmdanswer.replace("%VER%", getServer().getBukkitVersion().split("-")[0]); // Variable for Version
-            cmdanswer = cmdanswer.replace("%SERN%", getServer().getServerName()); // Variable for Servername
-
-
-            String[] answer = cmdanswer.split("%NL%", -1); // Split in lines
-
-            for(int i = 0; i < answer.length; i++){
-            e.getPlayer().sendMessage(answer[i]);
-            }
-            e.setCancelled(true);
-             
-             
-         }
-
+    
+  public void registerCommand(){
+      for (String command : getConfig().getConfigurationSection("commands").getKeys(false)) {           
+          AbstractCommand myCommand = new MyCommand(command, "/<command>", "Command by NewCommands", this);
+          myCommand.register();
+         }     
   }
+  
 }

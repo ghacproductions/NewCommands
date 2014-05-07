@@ -8,3 +8,7 @@ commands:
     description: 'Information about NewCommands plugin'
     usage: /<command>
     aliases: [nc]
+  permissions:
+   newcommands.reload:
+     description: 'Reload - Command'
+     default: false
