@@ -69,10 +69,14 @@ public class NewCommands extends JavaPlugin implements Listener{
                 p.sendMessage(ChatColor.DARK_RED + "You don't have permission");
                 return true;
             }
+        }else if(args[0].equalsIgnoreCase("list")){
+            if(p.hasPermission("newcommands.list")){
+                sendList(p);
+            }
         }
     }
     p.sendMessage(ChatColor.GOLD + "[" + this.getName()+"]" + ChatColor.DARK_GREEN + " NewCommands Plugin by ghac. 2014.");
-    return true;  
+    return true;
     }
     
     
@@ -83,6 +87,13 @@ public class NewCommands extends JavaPlugin implements Listener{
           AbstractCommand myCommand = new MyCommand(command, "/<command>", "Command by NewCommands", this);
           myCommand.register();
          }     
+  }
+  
+  public void sendList(Player p){
+      p.sendMessage(ChatColor.GOLD + "[" + this.getName()+"]" +  ChatColor.DARK_GREEN + " List of all NewCommands:");
+      for (String command : getConfig().getConfigurationSection("commands").getKeys(false)) {
+          p.sendMessage(ChatColor.GOLD + "/" + command + ": " + ChatColor.AQUA+ getConfig().getString("commands."+command));
+      }
   }
   
 }

@@ -52,9 +52,16 @@ public class MyCommand extends AbstractCommand {
         command = command.replace("/", "");
             if(t.getConfig().getString("commands." + command) != null){ 
                Player p = (Player) sender;
-               if(p.hasPermission("newcommands.command." + command + ".deny")){
-                   p.sendMessage(ChatColor.DARK_RED + "You don't have permission");
-               }else{             
+               
+               if(!p.isOp()){
+               if(!p.hasPermission("*")){
+                   if(p.hasPermission("newcommands.command." + command + ".deny")){
+                       p.sendMessage(ChatColor.DARK_RED + "You don't have permission");
+                       return true;
+                   }
+               }
+               }
+               
                String cmdanswer = t.getConfig().getString("commands." + command);
                cmdanswer = cmdanswer.replace("&", "§");
                cmdanswer = cmdanswer.replace("%MOTD%", t.getServer().getMotd()); // Variable for MOTD
@@ -72,7 +79,6 @@ public class MyCommand extends AbstractCommand {
                p.sendMessage(answer[i]);
                }
                
-               }
             }
         return false;
     //do command stuff
