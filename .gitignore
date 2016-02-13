@@ -1,0 +1,7 @@
+.settings/
+.project
+target/
+jenkins.pub
+.classpath
+.gitattributes
+jenkins
