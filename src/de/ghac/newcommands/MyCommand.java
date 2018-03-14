@@ -63,9 +63,9 @@ public class MyCommand extends AbstractCommand {
                }
                
                String cmdanswer = t.getConfig().getString("commands." + command);
-               cmdanswer = cmdanswer.replace("&", "§");
+               cmdanswer = cmdanswer.replace("&", "ï¿½");
                cmdanswer = cmdanswer.replace("%MOTD%", t.getServer().getMotd()); // Variable for MOTD
-               cmdanswer = cmdanswer.replace("%OP%", t.getServer().getOnlinePlayers().length+""); // Variable for OnlinePlayers
+               cmdanswer = cmdanswer.replace("%OP%", t.getServer().getOnlinePlayers().size()+""); // Variable for OnlinePlayers
                cmdanswer = cmdanswer.replace("%MAXP%", t.getServer().getMaxPlayers()+""); // Variable for MaxPlayers
                cmdanswer = cmdanswer.replace("%IP%", t.getServer().getIp()); // Variable for ServerIP
                cmdanswer = cmdanswer.replace("%VER%", t.getServer().getBukkitVersion().split("-")[0]); // Variable for Version
